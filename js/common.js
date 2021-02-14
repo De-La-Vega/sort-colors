@@ -134,12 +134,16 @@ const getList = (patchedColors) => patchedColors.map(
             class="colors-list__item"
             style="
                 background-color: #${color.hex};
-                color: #${color.yiq >= 128 ? '000000' : 'ffffff'};
                 flex-basis: ${document.getElementById('item-width').value || 150}px;
                 height: ${document.getElementById('item-height').value || 150}px;
             "
         >
-            #${color.hex}
+            <span
+                class="colors-list__item-text"
+                style="color: #${color.yiq >= 128 ? '000000' : 'ffffff'};"
+            >
+                #${color.hex}
+            </span>
         </div>
     `
 )
@@ -184,10 +188,14 @@ const renderResult = (hexArray) => {
     document.getElementById('results').innerHTML = result;
 };
 
-document.getElementById('btn-submit').addEventListener('click', () => {
+const renderData = () => {
     const { value } = document.getElementById('colors-list');
 
     if (value) {
         renderResult(value.split(',').filter((hex) => hex !== ''));
     }
-});
+}
+
+document.getElementById('btn-submit').addEventListener('click', renderData);
+
+renderData();

@@ -8,10 +8,13 @@ body {
     display: flex;
     flex-wrap: wrap;
     margin-bottom: 2rem;
+    border: 1px solid #dedede;
 
     &__item {
-        display: flex;
         padding: 12px;
-        font-size: 24px;
+
+        &-text {
+            font-size: 24px;
+        }
     }
 }
