@@ -1,0 +1,25 @@
+{
+  "name": "gulp-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.26.3",
+    "gulp": "^4.0.0",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-sass": "^4.0.2",
+    "gulp-stylelint": "^9.0.0",
+    "node-sass": "^4.11.0",
+    "stylelint": "^10.0.1",
+    "stylelint-config-recess-order": "^2.0.2",
+    "stylelint-config-standard": "^18.3.0"
+  },
+  "dependencies": {
+    "hexsorter": "^1.5.0"
+  }
+}
