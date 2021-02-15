@@ -1,3 +1,6 @@
+const itemWidth = document.getElementById('item-width');
+const itemHeight = document.getElementById('item-height');
+
 const hexValueSanitize = (color) => color
     .replace(/\s/g, '')
     .replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i, (m, r, g, b) => `${r}${r}${g}${g}${b}${b}`)
@@ -134,8 +137,8 @@ const getList = (patchedColors) => patchedColors.map(
             class="colors-list__item"
             style="
                 background-color: #${color.hex};
-                flex-basis: ${document.getElementById('item-width').value || 150}px;
-                height: ${document.getElementById('item-height').value || 150}px;
+                flex-basis: ${itemWidth.value || 150}px;
+                min-height: ${itemHeight.value || 150}px;
             "
         >
             <span
@@ -188,14 +191,40 @@ const renderResult = (hexArray) => {
     document.getElementById('results').innerHTML = result;
 };
 
-const renderData = () => {
-    const { value } = document.getElementById('colors-list');
+const renderError = (hexArray) => {
+    let result = '';
 
-    if (value) {
-        renderResult(value.split(',').filter((hex) => hex !== ''));
+    if (hexArray.length) {
+        result = `Following colors contain errors: ${hexArray.map((item) => item).join(', ')}`;
     }
-}
+
+    document.getElementById('errors').innerHTML = result;
+};
+
+const renderData = () => {
+    let errorsList = [];
+    const filteredList = document.getElementById('colors-list').value
+        .split(',')
+        .filter((hex) => {
+            const status = /^#([0-9A-F]{3}){1,2}$/i.test(hex);
+
+            if (!status && hex !== '') {
+                errorsList.push(hex);
+            }
+
+            return status;
+        });
+
+    if (filteredList.length) {
+        renderResult(filteredList);
+    }
+
+    renderError(errorsList);
+};
 
 document.getElementById('btn-submit').addEventListener('click', renderData);
+
+itemWidth.addEventListener('input', renderData);
+itemHeight.addEventListener('input', renderData);
 
 renderData();
