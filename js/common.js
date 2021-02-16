@@ -1,5 +1,7 @@
 const itemWidth = document.getElementById('item-width');
 const itemHeight = document.getElementById('item-height');
+const colorsList = document.getElementById('colors-list');
+const results = document.getElementById('results');
 
 const hexValueSanitize = (color) => color
     .replace(/\s/g, '')
@@ -131,26 +133,28 @@ const sortByDistance = (patchedColors) => {
     return sortedArr;
 };
 
-const getList = (patchedColors) => patchedColors.map(
-    (color) => `
-        <div
-            class="colors-list__item"
-            style="
-                background-color: #${color.hex};
-                flex-basis: ${itemWidth.value || 150}px;
-                min-height: ${itemHeight.value || 150}px;
-            "
-        >
-            <span
-                class="colors-list__item-text"
-                style="color: #${color.yiq >= 128 ? '000000' : 'ffffff'};"
+const getList = (patchedColors) => patchedColors
+    .map(
+        (color) => `
+            <div
+                class="colors-list__item"
+                style="
+                    background-color: #${color.hex};
+                    flex-basis: ${itemWidth.value || 150}px;
+                    min-height: ${itemHeight.value || 150}px;
+                "
             >
-                #${color.hex}
-            </span>
-        </div>
-    `
-)
-.join('');
+                <span
+                    class="colors-list__item-text"
+                    style="color: #${color.yiq >= 128 ? '000000' : 'ffffff'};"
+                >
+                    #${color.hex}
+                </span>
+                <button class="colors-list__item-button" data-color=${color.hex}>&times;</button>
+            </div>
+        `
+    )
+    .join('');
 
 const renderResult = (hexArray) => {
     const patchedColorsArray = hexArray.map(constructColor);
@@ -188,7 +192,7 @@ const renderResult = (hexArray) => {
     `)
     .join('');
 
-    document.getElementById('results').innerHTML = result;
+    results.innerHTML = result;
 };
 
 const renderError = (hexArray) => {
@@ -203,10 +207,10 @@ const renderError = (hexArray) => {
 
 const renderData = () => {
     let errorsList = [];
-    const filteredList = document.getElementById('colors-list').value
+    const filteredList = colorsList.value
         .split(',')
         .filter((hex) => {
-            const status = /^#([0-9A-F]{3}){1,2}$/i.test(hex);
+            const status = /^#([0-9A-F]{3}){1,2}$/i.test(`#${hexValueSanitize(hex)}`);
 
             if (!status && hex !== '') {
                 errorsList.push(hex);
@@ -217,6 +221,8 @@ const renderData = () => {
 
     if (filteredList.length) {
         renderResult(filteredList);
+    } else {
+        results.innerHTML = '';
     }
 
     renderError(errorsList);
@@ -226,5 +232,17 @@ document.getElementById('btn-submit').addEventListener('click', renderData);
 
 itemWidth.addEventListener('input', renderData);
 itemHeight.addEventListener('input', renderData);
+
+results.addEventListener('click', (event) => {
+    if (event.target.classList.contains('colors-list__item-button')) {
+        const filteredList = colorsList.value
+            .split(',')
+            .filter((hex) => `#${hexValueSanitize(hex)}` !== `#${event.target.dataset.color}`);
+        
+        colorsList.value = filteredList;
+
+        renderData();
+    }
+});
 
 renderData();

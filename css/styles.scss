@@ -11,10 +11,33 @@ body {
     border: 1px solid #dedede;
 
     &__item {
+        position: relative;
         padding: 12px;
 
         &-text {
             font-size: 24px;
+        }
+
+        &-button {
+            $size: 30px;
+
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: $size;
+            height: $size;
+            padding: 0;
+            margin: 0;
+            font-size: 20px;
+            line-height: $size;
+            background-color: rgba(255, 255, 255, .5);
+            border: 0;
+            opacity: 0;
+            transition: .2s;
+        }
+
+        &:hover &-button {
+            opacity: 1;
         }
     }
 }
